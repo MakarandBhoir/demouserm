@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.HtmlUtils;
 
 @RestController
 @RequestMapping("/demo")
@@ -44,8 +45,7 @@ public class DemoController {
     @GetMapping(value = "/xss", produces = MediaType.TEXT_HTML_VALUE)
     public String xssDemo(@RequestParam(defaultValue = "<h1>Hello Demo</h1>") String input) {
         logger.warn("GET /demo/xss called with input={}", input);
-        // TODO: Escape user input before rendering. This is intentionally vulnerable
-        // for the demo.
-        return "<html><body><h2>XSS Demo</h2><div>" + input + "</div></body></html>";
+        String safeInput = HtmlUtils.htmlEscape(input);
+        return "<html><body><h2>XSS Demo</h2><div>" + safeInput + "</div></body></html>";
     }
 }
